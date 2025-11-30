@@ -1,35 +1,50 @@
 #include <iostream>
-#include <bits/stdc++.h>
 using namespace std;
-class node{
-    public:
+
+class Node {
+public:
     int data;
-    node *next;
-    public:
-    node(int data1,node* next1){
-        data=data1;
-        next=next1;
-    }
-    node(int data){
-        this->data=data;
-        next=nullptr;
-    }
+    Node* next;
+    Node(int d) { data = d; next = NULL; }
 };
-node * reverser(node *head){
-    node *temp=head;
-    node* prev=NULL;
-    node* fore=NULL;
-    while(temp){
-        fore=temp->next;
-        temp->next=prev;
-        prev=temp;
-        temp=fore;
+
+Node* reverseList(Node* head) {
+    Node* prev = NULL;
+    Node* curr = head;
+    Node* next = NULL;
+
+    while (curr != NULL) {
+        next = curr->next;   // save next
+        curr->next = prev;   // reverse link
+        prev = curr;         // move prev forward
+        curr = next;         // move current forward
     }
-    return prev;
+    return prev;   // new head
 }
 
-int main()
-{
-    
-    return 0; 
+void printList(Node* head) {
+    while (head != NULL) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    // Hardcoded list: 1 -> 2 -> 3 -> 4 -> 5
+    Node* head = new Node(1);
+    head->next = new Node(2);
+    head->next->next = new Node(3);
+    head->next->next->next = new Node(4);
+    head->next->next->next->next = new Node(5);
+
+    cout << "Original List: ";
+    printList(head);
+
+    head = reverseList(head);
+
+    cout << "Reversed List: ";
+    printList(head);
+
+    return 0;
 }
