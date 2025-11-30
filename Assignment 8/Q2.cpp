@@ -111,6 +111,10 @@ int main() {
     vector<int> result = getPredSucc(root, 10);
     cout << "Predecessor: " << result[0] << endl;
     cout << "Successor: " << result[1] << endl;
+    cout<<"Search 7: " << (search(root, 7) ? "Found" : "Not Found") << endl;
+    cout<< "maximum: " << maximum(root)->data << endl;
+    cout<< "minimum: " << minimum(root)->data << endl;
 
     return 0;
 }
+
