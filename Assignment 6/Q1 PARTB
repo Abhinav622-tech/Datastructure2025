@@ -1,1 +1,250 @@
+#include <iostream>
+using namespace std;
 
+class Node {
+public:
+    int data;
+    Node* next;
+    Node* prev;
+
+    Node(int d) {
+        data = d;
+        next = prev = NULL;
+    }
+};
+
+class DoublyList {
+public:
+    Node* head;
+
+    DoublyList() {
+        head = NULL;
+    }
+
+    // INSERT AT BEGINNING
+    void insertBegin(int val) {
+        Node* n = new Node(val);
+
+        if (head == NULL) {
+            head = n;
+            return;
+        }
+
+        n->next = head;
+        head->prev = n;
+        head = n;
+    }
+
+    // INSERT AT END
+    void insertEnd(int val) {
+        Node* n = new Node(val);
+
+        if (head == NULL) {
+            head = n;
+            return;
+        }
+
+        Node* temp = head;
+        while (temp->next != NULL) temp = temp->next;
+
+        temp->next = n;
+        n->prev = temp;
+    }
+
+    // INSERT AFTER A NODE (key)
+    void insertAfter(int key, int val) {
+        Node* temp = head;
+
+        while (temp != NULL && temp->data != key)
+            temp = temp->next;
+
+        if (temp == NULL) {
+            cout << "Key not found!\n";
+            return;
+        }
+
+        Node* n = new Node(val);
+        n->next = temp->next;
+        n->prev = temp;
+
+        if (temp->next) temp->next->prev = n;
+
+        temp->next = n;
+    }
+
+    // INSERT BEFORE A NODE (key)
+    void insertBefore(int key, int val) {
+        if (head == NULL) return;
+
+        // If key is at head
+        if (head->data == key) {
+            insertBegin(val);
+            return;
+        }
+
+        Node* temp = head;
+
+        while (temp != NULL && temp->data != key)
+            temp = temp->next;
+
+        if (temp == NULL) {
+            cout << "Key not found!\n";
+            return;
+        }
+
+        Node* n = new Node(val);
+        n->next = temp;
+        n->prev = temp->prev;
+
+        temp->prev->next = n;
+        temp->prev = n;
+    }
+
+    // DELETE A NODE WITH GIVEN VALUE
+    void deleteNode(int key) {
+        if (head == NULL) return;
+
+        Node* temp = head;
+
+        // deleting head
+        if (temp->data == key) {
+            head = temp->next;
+            if (head) head->prev = NULL;
+            delete temp;
+            return;
+        }
+
+        while (temp != NULL && temp->data != key)
+            temp = temp->next;
+
+        if (temp == NULL) {
+            cout << "Node not found!\n";
+            return;
+        }
+
+        // unlink
+        if (temp->next) temp->next->prev = temp->prev;
+        if (temp->prev) temp->prev->next = temp->next;
+
+        delete temp;
+    }
+
+    // SEARCH A VALUE
+    bool search(int key) {
+        Node* temp = head;
+        while (temp != NULL) {
+            if (temp->data == key) return true;
+            temp = temp->next;
+        }
+        return false;
+    }
+
+    // DISPLAY FORWARD
+    void display() {
+        Node* temp = head;
+        cout << "List (Forward): ";
+        while (temp != NULL) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+
+    // DISPLAY BACKWARD
+    void displayReverse() {
+        Node* temp = head;
+
+        if (!temp) {
+            cout << "List empty\n";
+            return;
+        }
+
+        // reach last node
+        while (temp->next != NULL)
+            temp = temp->next;
+
+        cout << "List (Backward): ";
+        while (temp != NULL) {
+            cout << temp->data << " ";
+            temp = temp->prev;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    DoublyList dll;
+    int ch, val, key;
+
+    while (true) {
+        cout << "\n--- Doubly Linked List Menu ---\n";
+        cout << "1. Insert at Beginning\n";
+        cout << "2. Insert at End\n";
+        cout << "3. Insert After Node\n";
+        cout << "4. Insert Before Node\n";
+        cout << "5. Delete Node\n";
+        cout << "6. Search Node\n";
+        cout << "7. Display Forward\n";
+        cout << "8. Display Backward\n";
+        cout << "0. Exit\n";
+        cout << "Enter choice: ";
+        cin >> ch;
+
+        switch (ch) {
+            case 1:
+                cout << "Enter value: ";
+                cin >> val;
+                dll.insertBegin(val);
+                break;
+
+            case 2:
+                cout << "Enter value: ";
+                cin >> val;
+                dll.insertEnd(val);
+                break;
+
+            case 3:
+                cout << "Insert after which value? ";
+                cin >> key;
+                cout << "Enter new value: ";
+                cin >> val;
+                dll.insertAfter(key, val);
+                break;
+
+            case 4:
+                cout << "Insert before which value? ";
+                cin >> key;
+                cout << "Enter new value: ";
+                cin >> val;
+                dll.insertBefore(key, val);
+                break;
+
+            case 5:
+                cout << "Enter value to delete: ";
+                cin >> key;
+                dll.deleteNode(key);
+                break;
+
+            case 6:
+                cout << "Enter value to search: ";
+                cin >> key;
+                if (dll.search(key)) cout << "Found!\n";
+                else cout << "Not found!\n";
+                break;
+
+            case 7:
+                dll.display();
+                break;
+
+            case 8:
+                dll.displayReverse();
+                break;
+
+            case 0:
+                return 0;
+
+            default:
+                cout << "Invalid option!\n";
+        }
+    }
+}
