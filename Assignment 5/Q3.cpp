@@ -1,58 +1,37 @@
 #include <iostream>
-#include <bits/stdc++.h>
 using namespace std;
-class node{
-    public:
+
+class Node {
+public:
     int data;
-    node *next;
-    public:
-    node(int data1,node* next1){
-        data=data1;
-        next=next1;
-    }
-    node(int data){
-        this->data=data;
-        next=nullptr;
-    }
+    Node* next;
+    Node(int d) { data = d; next = NULL; }
 };
-int middle(node* head){
-    if(head == NULL) return -1;
 
-    // first pass: count nodes
-    node* temp = head;
-    int cnt = 0;
-    while(temp){
-        cnt++;
-        temp = temp->next;
+Node* findMiddle(Node* head) {
+    if (head == NULL) return NULL;
+
+    Node* slow = head;
+    Node* fast = head;
+
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
     }
-
-    int centre = cnt / 2;
-
-    // second pass: reach the middle node
-    temp = head;
-    cnt = 0;
-    while(temp){
-        if(cnt == centre) return temp->data;
-        cnt++;
-        temp = temp->next;
-    }
-    return -1; // fallback, should not hit
+    return slow;      // slow is now middle
 }
-node* convertvecttoll(vector <int> & arr){
-    node* head= new node(arr[0]);
-    node *mover=head;
-    for (int i=1; i<arr.size();i++){
-        node* temp= new node(arr[i]);
-        mover->next=temp;
-        mover=mover->next; //mover=temp;
-    }
-    return head;
-}
-int main()
-{
-    vector<int> arr={10,2,7,3,4};
-    node* head=convertvecttoll(arr);
-    int centre=middle(head);
-    cout<<centre;
-    return 0; 
+
+int main() {
+    // Hardcoded list: 1 -> 2 -> 3 -> 4 -> 5
+    Node* head = new Node(1);
+    head->next = new Node(2);
+    head->next->next = new Node(3);
+    head->next->next->next = new Node(4);
+    head->next->next->next->next = new Node(5);
+
+    Node* mid = findMiddle(head);
+
+    cout << "Middle Element = " << mid->data << endl;
+
+    return 0;
 }
