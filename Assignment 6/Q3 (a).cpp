@@ -1,33 +1,83 @@
 #include <iostream>
-#include <iomanip>
-#include <string>
 using namespace std;
-class ListNode{
-    public:
+
+class ListNode {
+public:
     int val;
     ListNode* next;
     ListNode* prev;
-    ListNode(int val1){
-        next=nullptr;
-        prev=nullptr;
-        val=val1;
+
+    ListNode(int v) {
+        val = v;
+        next = nullptr;
+        prev = nullptr;
     }
-    int size(ListNode* head){
-        int cnt=0;
-        if(head==NULL) return 0;
-        if(head->next==NULL) return 1;
-        ListNode* temp=head;
-        while(temp){
+};
+
+class DoublyList {
+public:
+    ListNode* head;
+
+    DoublyList() {
+        head = nullptr;
+    }
+
+    // INSERT AT END
+    void insert(int v) {
+        ListNode* n = new ListNode(v);
+
+        if (head == nullptr) {
+            head = n;
+            return;
+        }
+
+        ListNode* temp = head;
+        while (temp->next != nullptr)
+            temp = temp->next;
+
+        temp->next = n;
+        n->prev = temp;
+    }
+
+    // PRINT LIST
+    void printList() {
+        if (head == nullptr) {
+            cout << "List empty\n";
+            return;
+        }
+
+        ListNode* temp = head;
+        cout << "List: ";
+        while (temp != nullptr) {
+            cout << temp->val << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+
+    // SIZE OF LIST
+    int size() {
+        int cnt = 0;
+        ListNode* temp = head;
+        while (temp != nullptr) {
             cnt++;
-            temp=temp->next;
+            temp = temp->next;
         }
         return cnt;
     }
-
-
 };
-int main()
-{
-    
-    return 0; 
+
+int main() {
+
+    DoublyList dl;
+
+    dl.insert(10);
+    dl.insert(20);
+    dl.insert(30);
+    dl.insert(40);
+
+    dl.printList();
+    cout << "Size = " << dl.size() << endl;
+
+    return 0;
 }
