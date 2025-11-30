@@ -1,1 +1,87 @@
+#include <iostream>
+using namespace std;
+
+class CircularQueue {
+    int *arr;
+    int front, rear;
+    int capacity;
+    int currentSize;
+
+public:
+    CircularQueue(int cap = 10) {
+        capacity = cap;
+        arr = new int[capacity];
+        front = rear = -1;
+        currentSize = 0;
+    }
+
+    bool isEmpty() { return currentSize == 0; }
+    bool isFull() { return currentSize == capacity; }
+    int size() { return currentSize; }
+    int getCapacity() { return capacity; }
+
+    void enqueue(int x) {
+        if (isFull()) {
+            cout << "Queue Full\n";
+            return;
+        }
+        if (front == -1) front = 0;
+
+        rear = (rear + 1) % capacity;
+        arr[rear] = x;
+        currentSize++;
+    }
+
+    void dequeue() {
+        if (isEmpty()) {
+            cout << "Queue Empty\n";
+            return;
+        }
+
+        cout << "Dequeued: " << arr[front] << "\n";
+        front = (front + 1) % capacity;
+        currentSize--;
+
+        if (currentSize == 0) front = rear = -1;
+    }
+
+    void peek() {
+        if (isEmpty()) cout << "Queue Empty\n";
+        else cout << "Front: " << arr[front] << "\n";
+    }
+
+    void display() {
+        if (isEmpty()) { cout << "Queue Empty\n"; return; }
+
+        cout << "Queue: ";
+        int i = front;
+        for (int c = 0; c < currentSize; c++) {
+            cout << arr[i] << " ";
+            i = (i + 1) % capacity;
+        }
+        cout << "\n";
+    }
+};
+
+int main() {
+    CircularQueue q(10);
+    int ch, x;
+
+    while (true) {
+        cout << "\n1.Enqueue\n2.Dequeue\n3.Peek\n4.Display\n5.isEmpty\n6.isFull\n7.Size\n8.Capacity\n0.Exit\n";
+        cin >> ch;
+        if (ch == 0) break;
+
+        switch (ch) {
+            case 1: cin >> x; q.enqueue(x); break;
+            case 2: q.dequeue(); break;
+            case 3: q.peek(); break;
+            case 4: q.display(); break;
+            case 5: cout << (q.isEmpty() ? "Empty\n" : "Not Empty\n"); break;
+            case 6: cout << (q.isFull() ? "Full\n" : "Not Full\n"); break;
+            case 7: cout << "Size: " << q.size() << "\n"; break;
+            case 8: cout << "Capacity: " << q.getCapacity() << "\n"; break;
+        }
+    }
+}
 
