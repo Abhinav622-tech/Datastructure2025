@@ -1,74 +1,62 @@
-#include <bits/stdc++.h>
-#include<iostream>
+#include <iostream>
+#include <queue>
 using namespace std;
 
-class stacker{
-queue <int> st;
-queue <int> backup;
+// Stack using two queues
+class StackTwoQ {
+    queue<int> q1, q2;
 public:
-void push(int x){
-    st.push(x);
-}
-void pop(){
-    if(st.size()==0) {cout<<"underflow"; return;}
-    else if(st.size()==1){
-        st.pop();
-        return;
-    }
-    else{
-        int n=st.size();
-        for(int i=0;i<n-1;i++){
-            backup.push(st.front());
-            st.pop();
+    void push(int x) {
+        q2.push(x);
+        while (!q1.empty()) {
+            q2.push(q1.front());
+            q1.pop();
         }
-        st.pop();
-        for(int i=0;i<n-1;i++){
-            st.push(backup.front());
-            backup.pop();
-        }
-    }
-}
-bool isempty(){
-    if (st.size()==0){return true;}
-    return false;
-}
-int top(){
-    if(st.size()==0) {cout<<"underflow";  return -1;}
-    else if(st.size()==1){
-        return st.front();
-        
-    }
-    else{
-        int n=st.size();
-        int ans;
-        for(int i=0;i<n;i++){
-            if(i==n-1){ans=st.front();}
-            backup.push(st.front());
-            st.pop();
-        }
-
-        for(int i=0;i<n;i++){
-            st.push(backup.front());
-            backup.pop();
-        }
-        return ans;
+        swap(q1, q2);
     }
 
-}
+    void pop() {
+        if (q1.empty()) { cout << "Empty\n"; return; }
+        q1.pop();
+    }
 
+    int top() {
+        if (q1.empty()) return -1;
+        return q1.front();
+    }
 };
+
+// Stack using one queue
+class StackOneQ {
+    queue<int> q;
+public:
+    void push(int x) {
+        q.push(x);
+        int s = q.size();
+        for (int i = 0; i < s-1; i++) {
+            q.push(q.front());
+            q.pop();
+        }
+    }
+
+    void pop() {
+        if (q.empty()) { cout << "Empty\n"; return; }
+        q.pop();
+    }
+
+    int top() {
+        if (q.empty()) return -1;
+        return q.front();
+    }
+};
+
 int main() {
-    stacker st1;
-    st1.push(5);
-    cout<<st1.top()<<endl;
-    st1.push(7);
-    cout<<st1.top()<<endl;
-    st1.pop();
-    cout<<st1.top()<<endl;
-    st1.pop();
-    st1.pop();
+    StackTwoQ s1;
+    StackOneQ s2;
 
+    s1.push(10); s1.push(20); s1.push(30);
+    cout << "Top (two queues): " << s1.top() << "\n";
 
-
-    return 0;
+    s2.push(5); s2.push(15); s2.push(25);
+    cout << "Top (one queue): " << s2.top() << "\n";
 }
