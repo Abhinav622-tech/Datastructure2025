@@ -1,67 +1,112 @@
 #include <iostream>
-#include <bits/stdc++.h>
 using namespace std;
-class node{
-    public:
+
+class Node {
+public:
     int data;
-    node *next;
-    public:
-    node(int data1,node* next1){
-        data=data1;
-        next=next1;
-    }
-    node(int data){
-        this->data=data;
-        next=nullptr;
+    Node* next;
+
+    Node(int d) {
+        data = d;
+        next = NULL;
     }
 };
-node* counterremover(node* head,int key){
-    if(head==NULL){return head;}
-    int cnt=0;
-    node*  temp=head;
-    node* prev=NULL;
-    while(temp){
-        if(temp->data==key&& temp==head){
-            cnt++;
-            temp=temp->next;
-            head=temp;
-        }
-        else if(temp->data==key){
-            cnt++;
-            prev->next=temp->next;
-            temp=temp->next;
 
-        } else{
-        prev=temp;
-        temp=temp->next;}
+class SinglyList {
+public:
+    Node* head;
+
+    SinglyList() {
+        head = NULL;
     }
-    cout<<"counter of "<<key<<" = "<<cnt<<endl;
-    return head;
-}
-node* convertvecttoll(vector <int> & arr){
-    node* head= new node(arr[0]);
-    node *mover=head;
-    for (int i=1; i<arr.size();i++){
-        node* temp= new node(arr[i]);
-        mover->next=temp;
-        mover=mover->next; //mover=temp;
+
+    // Insert at end
+    void insertEnd(int val) {
+        Node* n = new Node(val);
+        if (head == NULL) {
+            head = n;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next != NULL)
+            temp = temp->next;
+        temp->next = n;
     }
-    return head;
-}
-void traversell(node* head){
-    node* temp=head;
-    while(temp!=nullptr){
-        cout<<temp->data<<"->";
-        temp=temp->next;
+
+    // Count occurrences
+    int countOccurrences(int key) {
+        int cnt = 0;
+        Node* temp = head;
+        while (temp != NULL) {
+            if (temp->data == key)
+                cnt++;
+            temp = temp->next;
+        }
+        return cnt;
     }
-    cout<<endl;
-}
-int main()
-{
-    vector<int> arr={1,2,1,2,1,3,1};
-    node* head=convertvecttoll(arr);
-    traversell(head);
-    head=counterremover(head,1);
-    traversell(head);
-    return 0; 
+
+    // Delete ALL occurrences of key
+    void deleteAll(int key) {
+
+        // Delete occurrences at head
+        while (head != NULL && head->data == key) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        }
+
+        // Delete remaining nodes
+        Node* curr = head;
+        Node* prev = NULL;
+
+        while (curr != NULL) {
+            if (curr->data == key) {
+                prev->next = curr->next;
+                delete curr;
+                curr = prev->next;
+            } else {
+                prev = curr;
+                curr = curr->next;
+            }
+        }
+    }
+
+    // Display list
+    void display() {
+        Node* temp = head;
+        while (temp != NULL) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+
+    SinglyList s;
+
+    // Hardcoded list: 10 -> 20 -> 30 -> 20 -> 40 -> 20 -> 50
+    s.insertEnd(10);
+    s.insertEnd(20);
+    s.insertEnd(30);
+    s.insertEnd(20);
+    s.insertEnd(40);
+    s.insertEnd(20);
+    s.insertEnd(50);
+
+    int key = 20;
+
+    cout << "Original List: ";
+    s.display();
+
+    int count = s.countOccurrences(key);
+    cout << "Occurrences of " << key << " = " << count << endl;
+
+    s.deleteAll(key);
+
+    cout << "List after deleting all occurrences of " << key << ": ";
+    s.display();
+
+    return 0;
 }
